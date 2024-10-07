@@ -1,0 +1,11 @@
+packages_path:
+  - /home/t003/westworld/inhouse/tool/rez-packages
+local_packages_path: /home/t003/westworld/inhouse/tool/rez-packages
+
+implicit_packages:
+  - ~platform==linux
+  - ~arch==aarch64
+  - ~os==centos-7
+  - env_settings
+
+debug_all: true
