@@ -6,7 +6,7 @@ version = "1.0.0"
 def commands():
     import os
     # 환경 변수 설정
-    env.REZ_BUILD_ARCH = "aarch64"
+    env.REZ_BUILD_ARCH = "x86_64"
     env.REZ_BUILD_PLATFORM = "linux"
     env.REZ_BUILD_OS = "centos-7"
     env.REZ_PACKAGES_PATH = "/home/t003/westworld/inhouse/tool/rez-packages"
