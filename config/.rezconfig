@@ -4,8 +4,8 @@ local_packages_path: /home/t003/westworld/inhouse/tool/rez-packages
 
 implicit_packages:
   - ~platform==linux
-  - ~arch==x86_64
-  - ~os==centos-7
+  - ~arch==x86_64 
+  - ~os==CentOS-7.9.2009
   - env_settings
 
 debug_all: true

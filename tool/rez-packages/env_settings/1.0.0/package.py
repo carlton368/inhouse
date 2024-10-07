@@ -11,7 +11,6 @@ def commands():
     env.REZ_BUILD_OS = "centos-7"
     env.REZ_PACKAGES_PATH = "/home/t003/westworld/inhouse/tool/rez-packages"
     env.REZ_BUILD_INSTALL_PATH = "/home/t003/westworld/inhouse/tool/rez-packages"
-    env.PYTHONPATH.prepend("/home/t003/westworld/rez/lib/python3.7/site-packages")
 
     # Bash 완성 스크립트 설정 (옵션)
     completion_script = "/home/t003/westworld/rez/completion/complete.sh"
