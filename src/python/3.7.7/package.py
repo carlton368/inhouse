@@ -1,30 +1,29 @@
 name = "python"
 version = "3.7.7"
-authors = ["wonjin LEE"]
-description = "Python programming language"
+authors = ["Guido van Rossum"]
+description = \
+    """ 프로그래밍 언어인 Python 3.7.7 버전"""
 
 tools = [
     "python",
     "python3",
+    "python3.7",
     "pip",
-    "pip3"
+    "pip3",
+    "idle",
+    "pydoc"
 ]
 
-# 런타임 의존성
-requires = [
-    "platform-linux",
-    "arch-x86_64"
-]
-
-# 빌드 타임 의존성
-build_requires = [
-    "cmake-3.10+",
-    "make",
-    "gcc"
-]
+uuid = "repository.python"
 
 variants = [
     ["platform-linux", "arch-x86_64"]
+]
+
+build_requires = [
+    "cmake-3.0+",
+    "make",
+    "gcc"
 ]
 
 def commands():
@@ -32,13 +31,14 @@ def commands():
     env.PATH.prepend("{root}/bin")
     env.PYTHONPATH.prepend("{root}/lib/python3.7/site-packages")
     env.LD_LIBRARY_PATH.prepend("{root}/lib")
+    env.PYTHONHOME = "{root}"
 
 build_command = """
-cmake -DCMAKE_INSTALL_PREFIX={install_path} {root} && \
-cmake --build . --target install_python && \
+mkdir -p {build_path} && cd {build_path} && \\
+cmake -DCMAKE_INSTALL_PREFIX={install_path} -DCMAKE_BUILD_TYPE=Release {root} && \\
+cmake --build . --target install && \\
 ln -sf {install_path}/bin/python3.7 {install_path}/bin/python
 """
 
-def pre_build_commands():
-    env.REZ_BUILD_CONFIG = "Release"
-
+def test_commands():
+    command("python --version")

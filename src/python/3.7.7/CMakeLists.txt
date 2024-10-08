@@ -23,13 +23,9 @@ ExternalProject_Add(Python
     LOG_INSTALL ON
 )
 
-# 설치를 위한 커스텀 타겟
-add_custom_target(install_python
-    DEPENDS Python
-    COMMAND ${CMAKE_COMMAND} -E echo "!Installing Python ${PYTHON_VERSION}..."
-    COMMAND ${CMAKE_COMMAND} -E env ${CMAKE_COMMAND} --build . --target Python
-    COMMAND ${CMAKE_COMMAND} -E echo "!Python ${PYTHON_VERSION} installation complete."
-)
+# 'install' 타겟이 Python의 설치 단계에 의존하도록 설정
+ExternalProject_Add_StepTargets(Python install)
+add_dependencies(install Python-install)
 
 # 공유 라이브러리 빌드 보장
 set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
@@ -37,4 +33,3 @@ set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
 # 설치 rpath 설정
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
