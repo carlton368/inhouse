@@ -1,6 +1,6 @@
 # package.py
 name = "ffmpeg"
-version = "4.1.0"
+version = "4.1.11"  # 버전 업데이트
 
 authors = ["FFmpeg Developers"]
 description = "FFmpeg is a complete, cross-platform solution to record, convert and stream audio and video."

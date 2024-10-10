@@ -4,7 +4,6 @@ import os
 import sys
 import subprocess
 import hashlib
-import tarfile
 
 def download_source(source_path, ffmpeg_url, archive_name):
     """FFmpeg 소스 코드를 다운로드합니다."""
@@ -12,10 +11,22 @@ def download_source(source_path, ffmpeg_url, archive_name):
     
     if not os.path.exists(archive_path):
         print(f"FFmpeg 소스 코드를 {ffmpeg_url}에서 다운로드 중...")
-        subprocess.check_call(["curl", "-L", ffmpeg_url, "-o", archive_path])
+        try:
+            # --fail 옵션 추가하여 HTTP 오류 시 실패하도록 함
+            subprocess.check_call(["curl", "-L", "--fail", ffmpeg_url, "-o", archive_path])
+        except subprocess.CalledProcessError as e:
+            print(f"FFmpeg 소스 다운로드에 실패했습니다: {e}")
+            sys.exit(1)
         print("다운로드 완료.")
     else:
         print(f"소스 아카이브가 이미 존재합니다: {archive_path}")
+    
+    # 파일 크기 확인
+    file_size = os.path.getsize(archive_path)
+    print(f"다운로드된 파일 크기: {file_size} bytes")
+    if file_size < 100000:  # 예시로 100KB 미만이면 실패로 간주
+        print("다운로드된 파일이 너무 작습니다. 다운로드가 제대로 완료되지 않았을 수 있습니다.")
+        sys.exit(1)
     
     return archive_path
 
@@ -34,8 +45,12 @@ def verify_checksum(archive_path, expected_checksum):
 def extract_archive(archive_path, build_path):
     """소스 아카이브를 추출합니다."""
     print(f"{archive_path}를 {build_path}로 추출 중...")
-    with tarfile.open(archive_path, "r:bz2") as tar:
-        tar.extractall(path=build_path)
+    try:
+        # .tar.gz 형식 추출
+        subprocess.check_call(["tar", "-xzf", archive_path, "-C", build_path])
+    except subprocess.CalledProcessError as e:
+        print(f"아카이브 추출에 실패했습니다: {e}")
+        sys.exit(1)
     print("추출 완료.")
 
 def configure_ffmpeg(source_dir, install_path):
@@ -59,7 +74,7 @@ def configure_ffmpeg(source_dir, install_path):
         "--enable-shared",
         "--enable-pthreads",
         "--enable-postproc",
-        "--enable-libz"
+        "--enable-zlib"  # 올바른 옵션으로 수정
     ]
     
     print("FFmpeg을 구성 중...")
@@ -81,20 +96,20 @@ def build(source_path, build_path, install_path, targets):
     """FFmpeg 빌드 스크립트."""
     print("FFmpeg 빌드 프로세스를 시작합니다...")
     
-    # FFmpeg 소스코드 다운로드
-    ffmpeg_url = "https://ffmpeg.org/releases/ffmpeg-4.1.0.tar.bz2"
-    archive_name = "ffmpeg-4.1.0.tar.bz2"
+    # FFmpeg 소스코드 다운로드 (.tar.gz 사용)
+    ffmpeg_url = "https://www.ffmpeg.org/releases/ffmpeg-4.1.11.tar.gz"
+    archive_name = "ffmpeg-4.1.11.tar.gz"
     archive_path = download_source(source_path, ffmpeg_url, archive_name)
     
-    # 체크섬 검증 (실제 체크섬으로 교체 필요)
-    expected_checksum = "9dcc361cf979ea9471e1076ab30724c665229614d2d7432dfe9127c8b6d3a443"
+    # 체크섬 검증
+    expected_checksum = "5c46dbd3c9c1becb372cf4f6d4b32bb9ed86f81119356f461ce0402af238eb22"
     verify_checksum(archive_path, expected_checksum)
     
     # 소스 아카이브 추출
     extract_archive(archive_path, build_path)
     
     # 추출된 소스 디렉토리 경로
-    ffmpeg_source_dir = os.path.join(build_path, "ffmpeg-4.1.0")
+    ffmpeg_source_dir = os.path.join(build_path, "ffmpeg-4.1.11")
     if not os.path.exists(ffmpeg_source_dir):
         raise FileNotFoundError(f"소스 디렉토리가 존재하지 않습니다: {ffmpeg_source_dir}")
     
@@ -111,8 +126,12 @@ def build(source_path, build_path, install_path, targets):
 
 if __name__ == "__main__":
     # 환경 변수에서 경로를 읽어옵니다.
-    install_path = os.environ["REZ_BUILD_INSTALL_PATH"]
-    build_path = os.environ["REZ_BUILD_PATH"]
-    source_path = os.path.dirname(os.path.realpath(__file__))
+    install_path = os.environ.get("REZ_BUILD_INSTALL_PATH")
+    build_path = os.environ.get("REZ_BUILD_PATH")
+    source_path = os.environ.get("REZ_BUILD_SOURCE_PATH", os.path.dirname(os.path.realpath(__file__)))
+    
+    if not install_path or not build_path:
+        print("환경 변수 REZ_BUILD_INSTALL_PATH 또는 REZ_BUILD_PATH가 설정되지 않았습니다.")
+        sys.exit(1)
     
     build(source_path, build_path, install_path, targets=None)
