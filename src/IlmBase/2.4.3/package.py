@@ -1,5 +1,5 @@
 # package.py
-name = "ilmbase"
+name = "IlmBase"
 version = "2.4.3"  # 사용하려는 IlmBase 버전으로 변경
 
 authors = ["Industrial Light & Magic"]

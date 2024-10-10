@@ -103,7 +103,7 @@ def build(source_path, build_path, install_path, targets):
     extract_archive(archive_path, build_path)
 
     # 추출된 소스 디렉토리 경로
-    ilmbase_source_dir = os.path.join(build_path, "openexr-2.4.3", "ilmbase")
+    ilmbase_source_dir = os.path.join(build_path, "openexr-2.4.3", "IlmBase")
     if not os.path.exists(ilmbase_source_dir):
         raise FileNotFoundError(f"소스 디렉토리가 존재하지 않습니다: {ilmbase_source_dir}")
 
