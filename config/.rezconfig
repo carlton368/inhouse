@@ -5,7 +5,15 @@ local_packages_path: /home/t003/westworld/inhouse/tool/rez-packages
 implicit_packages:
   - ~platform==linux
   - ~arch==x86_64 
-  - ~os==CentOS-7.9.2009
+  - ~os==centos-7
   - env_settings
+
+# 환경 변수 중앙 관리
+variables:
+  REZ_BUILD_ARCH: "x86_64"
+  REZ_BUILD_PLATFORM: "linux"
+  REZ_BUILD_OS: "centos-7"
+  REZ_PACKAGES_PATH: "/home/t003/westworld/inhouse/tool/rez-packages"
+  REZ_BUILD_INSTALL_PATH: "/home/t003/westworld/inhouse/tool/rez-packages"
 
 debug_all: true

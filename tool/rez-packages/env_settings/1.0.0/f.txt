@@ -1,0 +1,2 @@
+(REZ_PACKAGES_PATH 및 REZ_BUILD_INSTALL_PATH)
+packages_path 및 local_packages_path
