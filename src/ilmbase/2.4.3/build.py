@@ -58,9 +58,9 @@ def configure_ilmbase(source_dir, install_path):
 
     # 빌드를 위한 환경 변수 설정
     env = os.environ.copy()
-    env["PKG_CONFIG_PATH"] = f"{install_path}/lib/pkgconfig:" + env.get("PKG_CONFIG_PATH", "")
+    env["PKG_CONFIG_PATH"] = f"{install_path}/lib64/pkgconfig:" + env.get("PKG_CONFIG_PATH", "")
     env["CFLAGS"] = f"-I{install_path}/include " + env.get("CFLAGS", "")
-    env["LDFLAGS"] = f"-L{install_path}/lib " + env.get("LDFLAGS", "")
+    env["LDFLAGS"] = f"-L{install_path}/lib64 " + env.get("LDFLAGS", "")
 
     # CMake 구성 명령어
     configure_cmd = [

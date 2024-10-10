@@ -1,5 +1,5 @@
 # package.py
-name = "IlmBase"
+name = "ilmbase"
 version = "2.4.3"  # 사용하려는 IlmBase 버전으로 변경
 
 authors = ["Industrial Light & Magic"]
@@ -33,6 +33,6 @@ build_command = "python3 {root}/build.py {install_path}"
 
 def commands():
     env.PATH.prepend("{root}/bin")
-    env.LD_LIBRARY_PATH.prepend("{root}/lib")
-    env.PKG_CONFIG_PATH.prepend("{root}/lib/pkgconfig")
+    env.LD_LIBRARY_PATH.prepend("{root}/lib64")
+    env.PKG_CONFIG_PATH.prepend("{root}/lib64/pkgconfig")
     env.C_INCLUDE_PATH.prepend("{root}/include")
