@@ -70,11 +70,12 @@ def configure_ffmpeg(source_dir, install_path):
         "--enable-gpl",
         "--enable-nonfree",
         "--enable-libx264",
+        "--enable-libx265",
         "--disable-static",
         "--enable-shared",
         "--enable-pthreads",
         "--enable-postproc",
-        "--enable-zlib"  # 올바른 옵션으로 수정
+        "--enable-zlib"  
     ]
     
     print("FFmpeg을 구성 중...")

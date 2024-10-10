@@ -18,7 +18,8 @@ build_requires = [
 # 런타임 의존성: FFmpeg이 동작하는 데 필요한 라이브러리들
 requires = [
     "zlib-1.2.11+",
-    "libx264-0.148+"
+    "libx264-0.148+",  # x264 라이브러리
+    "libx265-3.4+"
 ]
 
 variants = [
