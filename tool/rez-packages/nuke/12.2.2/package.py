@@ -17,43 +17,35 @@ def commands():
     if not os.path.exists(nuke_root):
         print(f"Warning: Nuke root directory {nuke_root} does not exist.")
 
-    # env.prefix가 문자열인지 확인하고, 그렇지 않다면 문자열로 변환합니다.
-    if not isinstance(env.prefix, str):
-        bin_dir = os.path.join(str(env.prefix), 'bin')
-    else:
-        bin_dir = os.path.join(env.prefix, 'bin')
-
-    print(f"env.prefix: {env.prefix} (Type: {type(env.prefix)})")
-    print(f"bin_dir: {bin_dir} (Type: {type(bin_dir)})")
-
     # LD_LIBRARY_PATH에 Nuke의 라이브러리 경로를 추가합니다.
-    env.LD_LIBRARY_PATH.prepend(os.path.join(nuke_root, 'lib'))
+    lib_path = os.path.join(nuke_root, 'lib')
+    if os.path.exists(lib_path):
+        env.LD_LIBRARY_PATH.prepend(lib_path)
+    else:
+        print(f"Warning: Library path {lib_path} does not exist.")
 
     # NUKE_PATH에 플러그인 경로를 추가합니다.
-    env.NUKE_PATH.append(os.path.join(nuke_root, 'plugins'))
+    plugins_path = os.path.join(nuke_root, 'plugins')
+    if os.path.exists(plugins_path):
+        env.NUKE_PATH.append(plugins_path)
+    else:
+        print(f"Warning: Plugins path {plugins_path} does not exist.")
 
     # PYTHONPATH에 Nuke의 파이썬 모듈 경로를 추가합니다.
-    env.PYTHONPATH.prepend(os.path.join(nuke_root, 'python'))
+    python_path = os.path.join(nuke_root, 'python')
+    if os.path.exists(python_path):
+        env.PYTHONPATH.prepend(python_path)
+    else:
+        print(f"Warning: Python path {python_path} does not exist.")
 
-    # Rez 패키지 내에 bin 디렉토리를 생성합니다.
-    if not os.path.exists(bin_dir):
-        os.makedirs(bin_dir)
+    # Nuke 실행 파일의 절대 경로를 설정하고 alias로 등록합니다.
+    nuke_executable = os.path.join(nuke_root, 'Nuke12.2')
+    if not os.path.exists(nuke_executable):
+        print(f"Warning: Nuke executable {nuke_executable} does not exist.")
+    else:
+        # Rez 3.x에서는 env.aliases를 사용하여 alias를 설정할 수 있습니다.
+        env.aliases['nuke'] = nuke_executable
+        print(f"nuke executable set to: {nuke_executable}")
 
-    # Nuke 실행 파일을 호출하는 래퍼 스크립트를 생성합니다.
-    wrapper_script = os.path.join(bin_dir, 'nuke')
-    if not os.path.exists(wrapper_script):
-        with open(wrapper_script, 'w') as f:
-            f.write(f"""#!/bin/bash
-{nuke_root}/Nuke12.2 "$@"
-""")
-        os.chmod(wrapper_script, 0o755)
-
-    # 새로 생성한 bin 디렉토리를 PATH의 최상단에 추가합니다.
-    env.PATH.prepend(bin_dir)
-
-    # 추가적인 환경 변수 설정 (필요 시)
-    # 예: env.NUKE_USER_HOME = os.path.expanduser("~/.nuke")
-    
-    print(f"env.prefix: {env.prefix} (Type: {type(env.prefix)})")
-    print(f"nuke_root: {nuke_root} (Type: {type(nuke_root)})")
-    print(f"bin_dir: {bin_dir} (Type: {type(bin_dir)})")
+    # 래퍼 스크립트를 생성하지 않고 직접 alias를 설정함으로써 문제를 해결합니다.
+    # build_command = False이므로, bin 디렉토리를 생성하지 않습니다.
