@@ -1,7 +1,7 @@
 name = "nuke"
 version = "12.2.2"
 description = "Rez package for Nuke version 12.2.2"
-authors = ["foundry"]
+authors = ["foundary"]
 requires = ["python-2.7.5"]  # 추가 의존성이 있다면 여기에 추가
 
 build_command = False  # 이미 설치된 Nuke를 사용하므로 빌드 명령은 필요 없습니다.
@@ -12,12 +12,12 @@ def commands():
     print("Nuke 12.2.2를 기본 nuke로 설정합니다.")
 
     # Nuke 설치 경로를 설정합니다.
-    nuke_root = "/usr/local/Nuke12.2v2"  # 실제 Nuke 설치 경로.
+    nuke_root = "/usr/local/Nuke12.2v2"  # 실제 Nuke 설치 경로로 변경.
 
     if not os.path.exists(nuke_root):
         print(f"Warning: Nuke root directory {nuke_root} does not exist.")
 
-    # LD_LIBRARY_PATH에 Nuke의 라이브러리 경로를 추가.
+    # LD_LIBRARY_PATH에 Nuke의 라이브러리 경로를 추가합니다.
     lib_path = os.path.join(nuke_root, 'lib')
     if os.path.exists(lib_path):
         env.LD_LIBRARY_PATH.prepend(lib_path)
@@ -32,11 +32,19 @@ def commands():
         print(f"Warning: Plugins path {plugins_path} does not exist.")
 
     # PYTHONPATH에 Nuke의 파이썬 모듈 경로를 추가합니다.
-    python_path = os.path.join(nuke_root, 'python')
-    if os.path.exists(python_path):
-        env.PYTHONPATH.prepend(python_path)
+    # 올바른 파이썬 모듈 경로 추가
+    python_extensions_path = os.path.join(nuke_root, 'pythonextensions', 'site-packages')
+    python_lib_path = os.path.join(nuke_root, 'lib', 'python2.7', 'site-packages')
+
+    if os.path.exists(python_extensions_path):
+        env.PYTHONPATH.prepend(python_extensions_path)
     else:
-        print(f"Warning: Python path {python_path} does not exist.")
+        print(f"Warning: Python extensions path {python_extensions_path} does not exist.")
+
+    if os.path.exists(python_lib_path):
+        env.PYTHONPATH.prepend(python_lib_path)
+    else:
+        print(f"Warning: Python lib path {python_lib_path} does not exist.")
 
     # Nuke 실행 파일의 절대 경로를 설정하고 alias로 등록합니다.
     nuke_executable = os.path.join(nuke_root, 'Nuke12.2')
@@ -51,3 +59,4 @@ def commands():
 
     # 추가적인 환경 변수 설정 (필요 시)
     # 예: env.NUKE_USER_HOME = os.path.expanduser("~/.nuke")
+    # 예: env.FOUNDRY_LICENSE_SERVER = "license.server.address"
