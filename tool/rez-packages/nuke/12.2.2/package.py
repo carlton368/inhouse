@@ -1,7 +1,7 @@
 name = "nuke"
 version = "12.2.2"
 description = "Rez package for Nuke version 12.2.2"
-authors = ["foundary"]
+authors = ["foundry"]
 requires = ["python-2.7.5"]  # 추가 의존성이 있다면 여기에 추가
 
 build_command = False  # 이미 설치된 Nuke를 사용하므로 빌드 명령은 필요 없습니다.
@@ -43,9 +43,11 @@ def commands():
     if not os.path.exists(nuke_executable):
         print(f"Warning: Nuke executable {nuke_executable} does not exist.")
     else:
-        # Rez 3.x에서는 env.aliases를 사용하여 alias를 설정할 수 있습니다.
-        env.aliases['nuke'] = nuke_executable
+        # alias() 함수를 사용하여 별칭을 설정합니다.
+        alias("nuke", nuke_executable)
+        alias("nukex", f"{nuke_executable} -x")
         print(f"nuke executable set to: {nuke_executable}")
+        print(f"nukex executable set to: {nuke_executable} -x")
 
-    # 래퍼 스크립트를 생성하지 않고 직접 alias를 설정함으로써 문제를 해결합니다.
-    # build_command = False이므로, bin 디렉토리를 생성하지 않습니다.
+    # 추가적인 환경 변수 설정 (필요 시)
+    # 예: env.NUKE_USER_HOME = os.path.expanduser("~/.nuke")
