@@ -2,61 +2,40 @@ name = "nuke"
 version = "12.2.2"
 description = "Rez package for Nuke version 12.2.2"
 authors = ["foundary"]
-requires = ["python-2.7.5"]  # 추가 의존성이 있다면 여기에 추가
+# Python 의존성 제거
+# requires = ["python-2.7.5"]
 
-build_command = False  # 이미 설치된 Nuke를 사용하므로 빌드 명령은 필요 없습니다.
+build_command = False  # 빌드 명령 필요 없음
 
 def commands():
     import os
 
-    print("Nuke 12.2.2를 기본 nuke로 설정합니다.")
+    print("Nuke 12.2.2 환경을 설정 중입니다.")
 
-    # Nuke 설치 경로를 설정합니다.
-    nuke_root = "/usr/local/Nuke12.2v2"  # 실제 Nuke 설치 경로로 변경.
+    nuke_root = "/usr/local/Nuke12.2v2"  # 실제 Nuke 설치 경로로 업데이트
 
-    if not os.path.exists(nuke_root):
-        print(f"Warning: Nuke root directory {nuke_root} does not exist.")
+    # PYTHONPATH를 재설정하여 충돌 방지
+    env.PYTHONPATH = ""
 
-    # LD_LIBRARY_PATH에 Nuke의 라이브러리 경로를 추가합니다.
+    # Nuke의 라이브러리 경로 설정
     lib_path = os.path.join(nuke_root, 'lib')
-    if os.path.exists(lib_path):
-        env.LD_LIBRARY_PATH.prepend(lib_path)
-    else:
-        print(f"Warning: Library path {lib_path} does not exist.")
+    env.LD_LIBRARY_PATH.prepend(lib_path)
 
-    # NUKE_PATH에 플러그인 경로를 추가합니다.
+    # Nuke의 플러그인 경로 설정
     plugins_path = os.path.join(nuke_root, 'plugins')
-    if os.path.exists(plugins_path):
-        env.NUKE_PATH.append(plugins_path)
-    else:
-        print(f"Warning: Plugins path {plugins_path} does not exist.")
+    env.NUKE_PATH.append(plugins_path)
 
-    # PYTHONPATH에 Nuke의 파이썬 모듈 경로를 추가합니다.
-    # 올바른 파이썬 모듈 경로 추가
+    # Nuke의 Python 경로 추가
     python_extensions_path = os.path.join(nuke_root, 'pythonextensions', 'site-packages')
     python_lib_path = os.path.join(nuke_root, 'lib', 'python2.7', 'site-packages')
 
-    if os.path.exists(python_extensions_path):
-        env.PYTHONPATH.prepend(python_extensions_path)
-    else:
-        print(f"Warning: Python extensions path {python_extensions_path} does not exist.")
+    env.PYTHONPATH.prepend(python_extensions_path)
+    env.PYTHONPATH.prepend(python_lib_path)
 
-    if os.path.exists(python_lib_path):
-        env.PYTHONPATH.prepend(python_lib_path)
-    else:
-        print(f"Warning: Python lib path {python_lib_path} does not exist.")
-
-    # Nuke 실행 파일의 절대 경로를 설정하고 alias로 등록합니다.
+    # Nuke 실행 파일의 별칭 설정
     nuke_executable = os.path.join(nuke_root, 'Nuke12.2')
-    if not os.path.exists(nuke_executable):
-        print(f"Warning: Nuke executable {nuke_executable} does not exist.")
-    else:
-        # alias() 함수를 사용하여 별칭을 설정합니다.
-        alias("nuke", nuke_executable)
-        alias("nukex", f"{nuke_executable} -x")
-        print(f"nuke executable set to: {nuke_executable}")
-        print(f"nukex executable set to: {nuke_executable} -x")
+    alias("nuke", nuke_executable)
+    alias("nukex", f"{nuke_executable} -x")
 
-    # 추가적인 환경 변수 설정 (필요 시)
-    # 예: env.NUKE_USER_HOME = os.path.expanduser("~/.nuke")
-    # 예: env.FOUNDRY_LICENSE_SERVER = "license.server.address"
+    print(f"nuke 실행 파일 경로: {nuke_executable}")
+    print(f"nukex 실행 파일 경로: {nuke_executable} -x")
