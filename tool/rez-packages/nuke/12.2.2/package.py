@@ -17,6 +17,15 @@ def commands():
     if not os.path.exists(nuke_root):
         print(f"Warning: Nuke root directory {nuke_root} does not exist.")
 
+    # env.prefix가 문자열인지 확인하고, 그렇지 않다면 문자열로 변환합니다.
+    if not isinstance(env.prefix, str):
+        bin_dir = os.path.join(str(env.prefix), 'bin')
+    else:
+        bin_dir = os.path.join(env.prefix, 'bin')
+
+    print(f"env.prefix: {env.prefix} (Type: {type(env.prefix)})")
+    print(f"bin_dir: {bin_dir} (Type: {type(bin_dir)})")
+
     # LD_LIBRARY_PATH에 Nuke의 라이브러리 경로를 추가합니다.
     env.LD_LIBRARY_PATH.prepend(os.path.join(nuke_root, 'lib'))
 
@@ -27,7 +36,6 @@ def commands():
     env.PYTHONPATH.prepend(os.path.join(nuke_root, 'python'))
 
     # Rez 패키지 내에 bin 디렉토리를 생성합니다.
-    bin_dir = os.path.join(env.prefix, 'bin')
     if not os.path.exists(bin_dir):
         os.makedirs(bin_dir)
 
@@ -45,3 +53,7 @@ def commands():
 
     # 추가적인 환경 변수 설정 (필요 시)
     # 예: env.NUKE_USER_HOME = os.path.expanduser("~/.nuke")
+    
+    print(f"env.prefix: {env.prefix} (Type: {type(env.prefix)})")
+    print(f"nuke_root: {nuke_root} (Type: {type(nuke_root)})")
+    print(f"bin_dir: {bin_dir} (Type: {type(bin_dir)})")
