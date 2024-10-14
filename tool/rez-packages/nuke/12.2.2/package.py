@@ -12,12 +12,12 @@ def commands():
     print("Nuke 12.2.2를 기본 nuke로 설정합니다.")
 
     # Nuke 설치 경로를 설정합니다.
-    nuke_root = "/usr/local/Nuke12.2v2"  # 실제 Nuke 설치 경로로 변경하세요.
+    nuke_root = "/usr/local/Nuke12.2v2"  # 실제 Nuke 설치 경로.
 
     if not os.path.exists(nuke_root):
         print(f"Warning: Nuke root directory {nuke_root} does not exist.")
 
-    # LD_LIBRARY_PATH에 Nuke의 라이브러리 경로를 추가합니다.
+    # LD_LIBRARY_PATH에 Nuke의 라이브러리 경로를 추가.
     lib_path = os.path.join(nuke_root, 'lib')
     if os.path.exists(lib_path):
         env.LD_LIBRARY_PATH.prepend(lib_path)
